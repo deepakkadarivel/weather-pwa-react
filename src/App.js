@@ -1,31 +1,7 @@
-import React, { useState } from "react";
+import React, { Suspense, useState, lazy } from "react";
 import { fetchWeather } from "./api";
 import "./App.css";
-import { constants } from "./utils";
-
-const WeatherCard = ({ data }) => {
-  const { name, sys, main, weather } = data;
-  return (
-    <div className="city">
-      <h2 className="city-name">
-        <span>{name}</span>
-        <sup>{sys?.country}</sup>
-      </h2>
-      <div className="city-temp">
-        {Math.round(main?.temp)}
-        <sup>&deg;</sup>
-      </div>
-      <div className="info">
-        <img
-          className="city-icon"
-          src={`${constants.BASE_URL}/img/wn/${weather[0].icon}@2x.png`}
-          alt={weather[0].description}
-        />
-        <p>{weather[0].description}</p>
-      </div>
-    </div>
-  );
-};
+const WeatherCard = lazy(() => import("./components/WeatherCard"));
 
 const App = () => {
   const [query, setQuery] = useState("");
@@ -40,7 +16,11 @@ const App = () => {
 
   return (
     <div className="main-container">
+      <label className="search-label" htmlFor="search">
+        Search by city
+      </label>
       <input
+        id="search"
         type="text"
         className="search"
         placeholder="Search..."
@@ -48,8 +28,9 @@ const App = () => {
         onChange={(e) => setQuery(e.target.value)}
         onKeyPress={search}
       />
-
-      {weather?.main && <WeatherCard data={weather} />}
+      <Suspense fallback="Loading ...">
+        {weather?.main && <WeatherCard data={weather} />}
+      </Suspense>
     </div>
   );
 };
