@@ -1,5 +1,7 @@
 # PWA Weather App using React
 
+Preview: https://weather-pwa-react-gamma.vercel.app/
+
 ## Available Scripts
 
 In the project directory, you can run:
